@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -37,7 +36,7 @@ func main() {
 	project.ProjectURL = pterm.Sprintf("github.com/%s/%s", project.Username, project.Reponame)
 	project.ProjectName = pterm.Sprintf("%s/%s", project.Username, project.Reponame)
 
-	const cliTemplatePath = "pterm/cli-template"
+	const cliTemplatePath = "x0f5c3/cli-template"
 	pterm.Info.Printfln("Replacing all '%s' with %s", pterm.Magenta(cliTemplatePath), pterm.Magenta(project.ProjectName))
 	walkOverExt("go,mod", func(path string) {
 		pterm.Debug.Printfln("Replacing '%s' in %s with %s", pterm.Magenta(cliTemplatePath), path, pterm.Magenta(project.ProjectName))
@@ -88,13 +87,13 @@ func detectOriginURL() (url string) {
 }
 
 func replaceAllInFile(filepath, search, replace string) {
-	fileBytes, err := ioutil.ReadFile(filepath)
+	fileBytes, err := os.ReadFile(filepath)
 	pterm.Warning.PrintOnError(err)
 	content := string(fileBytes)
 
 	content = strings.ReplaceAll(content, search, replace)
 
-	pterm.Warning.PrintOnError(ioutil.WriteFile(filepath, []byte(content), 0600))
+	pterm.Warning.PrintOnError(os.WriteFile(filepath, []byte(content), 0600))
 }
 
 func getPathTo(file string) string {
